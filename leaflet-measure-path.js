@@ -404,21 +404,25 @@
         }),
 
         formatArea: formatArea,
+        // @ttungbmt
+        formatDistance: formatDistance,
 
         updateMeasurements: function() {
             if (!this._measurementLayer) return;
 
             var latLng = this.getLatLng(),
                 options = this._measurementOptions,
-                formatter = options.formatArea || L.bind(this.formatArea, this);
+                formatterArea = options.formatArea || L.bind(this.formatArea, this),
+                // @ttungbmt
+                formatterDistance = this._measurementOptions.formatDistance || L.bind(this.formatDistance, this)
 
             this._measurementLayer.clearLayers();
 
             if (options.showArea) {
-                formatter = options.formatArea || L.bind(this.formatArea, this);
                 var area = circleArea(this.getRadius());
                 L.marker.measurement(latLng,
-                    formatter(area), options.lang.totalArea, 0, options)
+                    // @ttungbmt
+                    `${formatterArea(area)} / ${formatterDistance(this.getRadius())}`, options.lang.totalArea, 0, options)
                     .addTo(this._measurementLayer);
             }
         }
